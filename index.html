@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>EH Brand — Admin Panel</title>
+    <link rel="stylesheet" href="admin-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════════ -->
+<div id="loginScreen">
+    <div class="login-bg">
+        <div class="login-blob b1"></div>
+        <div class="login-blob b2"></div>
+    </div>
+    <div class="login-card">
+        <div class="login-logo">
+            <i class="fas fa-shield-halved"></i>
+        </div>
+        <h1 class="login-brand">EH Brand</h1>
+        <p class="login-sub">Admin Panel — নিরাপদ প্রবেশ</p>
+        <div class="login-form">
+            <div class="lf-group">
+                <i class="fas fa-envelope lf-icon"></i>
+                <input type="email" id="loginEmail" class="lf-input" placeholder="ইমেইল আইডি">
+            </div>
+            <div class="lf-group">
+                <i class="fas fa-lock lf-icon"></i>
+                <input type="password" id="loginPass" class="lf-input" placeholder="পাসওয়ার্ড">
+                <button class="lf-eye" onclick="togglePass()" id="eyeBtn"><i class="fas fa-eye" id="eyeIcon"></i></button>
+            </div>
+            <div class="login-error" id="loginError"></div>
+            <button class="login-btn" id="loginBtn" onclick="doLogin()">
+                <i class="fas fa-arrow-right-to-bracket"></i> প্রবেশ করুন
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════════ -->
+<div id="appShell" style="display:none">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sb-head">
+            <div class="sb-logo"><i class="fas fa-bolt"></i></div>
+            <div class="sb-brand">
+                <span class="sb-name">EH Brand</span>
+                <span class="sb-role">Admin Panel</span>
+            </div>
+            <button class="sb-close" id="sbClose"><i class="fas fa-xmark"></i></button>
+        </div>
+
+        <div class="sb-user">
+            <div class="sb-avatar"><i class="fas fa-user-tie"></i></div>
+            <div class="sb-uinfo">
+                <span class="sb-uname" id="sbUserName">অ্যাডমিন</span>
+                <span class="sb-uemail" id="sbUserEmail">লোড হচ্ছে...</span>
+            </div>
+        </div>
+
+        <nav class="sb-nav">
+            <div class="sb-nav-label">মেইন মেনু</div>
+            <a class="sb-link active" data-sec="dashboard">
+                <span class="sb-link-icon"><i class="fas fa-gauge-high"></i></span>
+                <span class="sb-link-text">ড্যাশবোর্ড</span>
+            </a>
+            <a class="sb-link" data-sec="orders">
+                <span class="sb-link-icon"><i class="fas fa-cart-shopping"></i></span>
+                <span class="sb-link-text">অর্ডার সমূহ</span>
+                <span class="sb-badge" id="pendingBadge">0</span>
+            </a>
+            <a class="sb-link" data-sec="products">
+                <span class="sb-link-icon"><i class="fas fa-box-open"></i></span>
+                <span class="sb-link-text">পণ্য ব্যবস্থাপনা</span>
+            </a>
+            <a class="sb-link" data-sec="sliders">
+                <span class="sb-link-icon"><i class="fas fa-images"></i></span>
+                <span class="sb-link-text">Slider ম্যানেজমেন্ট</span>
+            </a>
+            <div class="sb-nav-label" style="margin-top:1rem">সেটিংস</div>
+            <a class="sb-link" id="logoutLink">
+                <span class="sb-link-icon"><i class="fas fa-right-from-bracket"></i></span>
+                <span class="sb-link-text">লগআউট</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Overlay for mobile -->
+    <div class="sb-overlay" id="sbOverlay"></div>
+
+    <!-- Main -->
+    <div class="main-wrap">
+
+        <!-- Top bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="hamburger" id="hamburger"><i class="fas fa-bars"></i></button>
+                <div class="topbar-title" id="topTitle">ড্যাশবোর্ড</div>
+            </div>
+            <div class="topbar-right">
+                <a href="../index.html" class="tb-btn" target="_blank" title="ওয়েবসাইট দেখুন">
+                    <i class="fas fa-arrow-up-right-from-square"></i>
+                </a>
+                <div class="tb-user">
+                    <i class="fas fa-circle-user"></i>
+                    <span id="tbEmail">অ্যাডমিন</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="content-area">
+
+            <!-- ══ DASHBOARD ══ -->
+            <section class="page active" id="sec-dashboard">
+
+                <!-- Stat cards -->
+                <div class="stat-grid">
+                    <div class="stat-card" style="--c:#6366f1">
+                        <div class="stat-icon"><i class="fas fa-boxes-stacked"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="st-products">—</div>
+                            <div class="stat-label">মোট পণ্য</div>
+                        </div>
+                        <div class="stat-trend"><i class="fas fa-box"></i></div>
+                    </div>
+                    <div class="stat-card" style="--c:#10b981">
+                        <div class="stat-icon"><i class="fas fa-cart-shopping"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="st-orders">—</div>
+                            <div class="stat-label">মোট অর্ডার</div>
+                        </div>
+                        <div class="stat-trend"><i class="fas fa-shopping-bag"></i></div>
+                    </div>
+                    <div class="stat-card" style="--c:#f59e0b">
+                        <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="st-pending">—</div>
+                            <div class="stat-label">বাকি অর্ডার</div>
+                        </div>
+                        <div class="stat-trend"><i class="fas fa-clock"></i></div>
+                    </div>
+                    <div class="stat-card" style="--c:#ef4444">
+                        <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-num" id="st-today">—</div>
+                            <div class="stat-label">আজকের অর্ডার</div>
+                        </div>
+                        <div class="stat-trend"><i class="fas fa-chart-line"></i></div>
+                    </div>
+                </div>
+
+                <!-- Recent orders widget -->
+                <div class="dash-grid">
+                    <div class="dash-panel">
+                        <div class="panel-head">
+                            <h3><i class="fas fa-clock-rotate-left"></i> সর্বশেষ অর্ডার</h3>
+                            <button class="panel-btn" onclick="switchSec('orders')">সব দেখুন →</button>
+                        </div>
+                        <div class="panel-body" id="recentOrdersList">
+                            <div class="panel-loader"><i class="fas fa-spinner fa-spin"></i></div>
+                        </div>
+                    </div>
+                    <div class="dash-panel">
+                        <div class="panel-head">
+                            <h3><i class="fas fa-chart-pie"></i> অর্ডার সারসংক্ষেপ</h3>
+                        </div>
+                        <div class="panel-body" id="orderSummary">
+                            <div class="panel-loader"><i class="fas fa-spinner fa-spin"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══ ORDERS ══ -->
+            <section class="page" id="sec-orders">
+                <div class="page-head">
+                    <div>
+                        <h2 class="page-title">অর্ডার ব্যবস্থাপনা</h2>
+                        <p class="page-sub">সকল কাস্টমার অর্ডার ও ট্রানজেকশন বিস্তারিত</p>
+                    </div>
+                    <div class="page-head-actions">
+                        <div class="filter-pill">
+                            <i class="fas fa-filter"></i>
+                            <select id="statusFilter" onchange="applyOrderFilter()">
+                                <option value="all">সব অর্ডার</option>
+                                <option value="Pending">বাকি</option>
+                                <option value="Confirmed">নিশ্চিত</option>
+                                <option value="Delivered">ডেলিভারি</option>
+                                <option value="Cancelled">বাতিল</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-table" id="ordersContainer">
+                    <div class="tbl-loader"><i class="fas fa-spinner fa-spin"></i> লোড হচ্ছে...</div>
+                </div>
+            </section>
+
+            <!-- ══ PRODUCTS ══ -->
+            <section class="page" id="sec-products">
+                <div class="page-head">
+                    <div>
+                        <h2 class="page-title">পণ্য ব্যবস্থাপনা</h2>
+                        <p class="page-sub">পণ্য যোগ, সম্পাদনা এবং মুছে ফেলুন</p>
+                    </div>
+                    <div class="page-head-actions">
+                        <div class="filter-pill">
+                            <i class="fas fa-layer-group"></i>
+                            <select id="categoryFilter" onchange="loadProductsTable()">
+                                <option value="all">সব ক্যাটাগরি</option>
+                            </select>
+                        </div>
+                        <button class="action-btn primary-btn" id="addProductBtn">
+                            <i class="fas fa-plus"></i> নতুন পণ্য
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-table" id="productsContainer">
+                    <div class="tbl-loader"><i class="fas fa-spinner fa-spin"></i> লোড হচ্ছে...</div>
+                </div>
+            </section>
+
+            <!-- ══ SLIDERS ══ -->
+            <section class="page" id="sec-sliders">
+                <div class="page-head">
+                    <div>
+                        <h2 class="page-title">Slider ম্যানেজমেন্ট</h2>
+                        <p class="page-sub">ওয়েবসাইটের ব্যানার ইমেজ পরিবর্তন করুন</p>
+                    </div>
+                </div>
+
+                <!-- Add slider card -->
+                <div class="slider-add-card">
+                    <h4><i class="fas fa-plus-circle"></i> নতুন Slider যোগ করুন</h4>
+                    <div class="sl-form-row">
+                        <div class="sl-field">
+                            <label>ইমেজ URL <span class="req">*</span></label>
+                            <input type="url" id="slImgUrl" class="sl-input" placeholder="https://i.ibb.co/..." oninput="slPreview(this.value)">
+                        </div>
+                        <div class="sl-field sl-field-sm">
+                            <label>ক্রম নং</label>
+                            <input type="number" id="slOrder" class="sl-input" value="1" min="1">
+                        </div>
+                    </div>
+                    <div class="sl-form-row">
+                        <div class="sl-field">
+                            <label>শিরোনাম (ঐচ্ছিক)</label>
+                            <input type="text" id="slTitle" class="sl-input" placeholder="যেমনঃ বিশেষ অফার">
+                        </div>
+                        <div class="sl-field">
+                            <label>লিংক (ঐচ্ছিক)</label>
+                            <input type="url" id="slLink" class="sl-input" placeholder="https://...">
+                        </div>
+                    </div>
+                    <div class="sl-preview-wrap" id="slPreviewWrap">
+                        <div class="sl-preview-ph" id="slPreviewPh">
+                            <i class="fas fa-image"></i>
+                            <span>URL দিলে preview দেখাবে</span>
+                        </div>
+                        <img id="slPreviewImg" style="display:none" alt="preview">
+                    </div>
+                    <button class="action-btn primary-btn" id="slAddBtn" onclick="addSlider()">
+                        <i class="fas fa-plus"></i> Slider যোগ করুন
+                    </button>
+                </div>
+
+                <div class="slider-list-wrap">
+                    <div class="panel-head" style="margin-bottom:1rem">
+                        <h3><i class="fas fa-list-ul"></i> বর্তমান Slider</h3>
+                        <span class="panel-btn no-hover" id="slCount">লোড হচ্ছে...</span>
+                    </div>
+                    <div id="sliderListContainer">
+                        <div class="tbl-loader"><i class="fas fa-spinner fa-spin"></i></div>
+                    </div>
+                </div>
+            </section>
+
+        </div><!-- /content-area -->
+    </div><!-- /main-wrap -->
+</div><!-- /appShell -->
+
+<!-- ══ ORDER DETAIL MODAL ══ -->
+<div class="modal-overlay" id="orderModal" onclick="closeOrderModal(event)">
+    <div class="modal-box order-modal-box">
+        <div class="modal-top">
+            <h3 class="modal-title"><i class="fas fa-receipt"></i> অর্ডার বিস্তারিত</h3>
+            <button class="modal-close" onclick="closeOrderModal()"><i class="fas fa-xmark"></i></button>
+        </div>
+        <div class="modal-body" id="orderModalBody"></div>
+    </div>
+</div>
+
+<!-- ══ PRODUCT MODAL ══ -->
+<div class="modal-overlay" id="productModal" onclick="closeProdModal(event)">
+    <div class="modal-box product-modal-box">
+        <div class="modal-top">
+            <h3 class="modal-title" id="prodModalTitle"><i class="fas fa-box"></i> নতুন পণ্য</h3>
+            <button class="modal-close" onclick="closeProdModal()"><i class="fas fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+            <form id="productForm">
+                <input type="hidden" id="productId">
+                <div class="mf-group">
+                    <label class="mf-label"><i class="fas fa-tag"></i> পণ্যের নাম *</label>
+                    <input type="text" id="productName" class="mf-input" placeholder="যেমনঃ Premium Cotton Shirt" required>
+                </div>
+                <div class="mf-row">
+                    <div class="mf-group">
+                        <label class="mf-label"><i class="fas fa-bangladeshi-taka-sign"></i> দাম (TK) *</label>
+                        <input type="number" id="productPrice" class="mf-input" placeholder="0" required>
+                    </div>
+                    <div class="mf-group">
+                        <label class="mf-label"><i class="fas fa-percent"></i> ডিসকাউন্ট (%)</label>
+                        <input type="number" id="productDiscount" class="mf-input" value="0" min="0" max="100">
+                    </div>
+                </div>
+                <div class="mf-row">
+                    <div class="mf-group">
+                        <label class="mf-label"><i class="fas fa-barcode"></i> পণ্য কোড *</label>
+                        <input type="text" id="productCode" class="mf-input" placeholder="যেমনঃ EH-001" required>
+                    </div>
+                    <div class="mf-group">
+                        <label class="mf-label"><i class="fas fa-layer-group"></i> ক্যাটাগরি</label>
+                        <select id="productCategory" class="mf-input">
+                            <option value="">-- বেছে নিন --</option>
+                            <option value="পোশাক">👕 পোশাক</option>
+                            <option value="ইলেকট্রনিক্স">📱 ইলেকট্রনিক্স</option>
+                            <option value="জুতা">👟 জুতা</option>
+                            <option value="ব্যাগ">👜 ব্যাগ</option>
+                            <option value="গহনা">💍 গহনা</option>
+                            <option value="সৌন্দর্য">💄 সৌন্দর্য</option>
+                            <option value="খাবার">🍎 খাবার</option>
+                            <option value="খেলনা">🧸 খেলনা</option>
+                            <option value="আসবাবপত্র">🪑 আসবাবপত্র</option>
+                            <option value="বই">📚 বই</option>
+                            <option value="অন্যান্য">📦 অন্যান্য</option>
+                            <option value="custom">✏️ নতুন লিখুন...</option>
+                        </select>
+                        <input type="text" id="customCategory" class="mf-input" placeholder="নতুন ক্যাটাগরি লিখুন" style="display:none;margin-top:6px">
+                    </div>
+                </div>
+                <div class="mf-group">
+                    <label class="mf-label"><i class="fas fa-image"></i> মেইন ছবির লিংক</label>
+                    <input type="url" id="productImage" class="mf-input" placeholder="https://i.ibb.co/...">
+                    <small class="mf-hint">প্রথম ছবিটি প্রোডাক্ট কার্ডে দেখাবে</small>
+                </div>
+                <div class="mf-group">
+                    <label class="mf-label"><i class="fas fa-images"></i> গ্যালারি ছবি</label>
+                    <div id="multiImageContainer">
+                        <div class="img-input-row" data-index="0">
+                            <input type="url" class="mf-input extra-img" placeholder="https://i.ibb.co/... (ছবি ২)">
+                            <button type="button" class="img-rm-btn" onclick="this.closest('.img-input-row').remove()"><i class="fas fa-xmark"></i></button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-img-btn" id="addMoreImgBtn"><i class="fas fa-plus"></i> আরো ছবি</button>
+                </div>
+                <div class="mf-group">
+                    <label class="mf-label"><i class="fas fa-align-left"></i> বর্ণনা</label>
+                    <textarea id="productDescription" class="mf-input mf-textarea" rows="3" placeholder="পণ্যের বিস্তারিত..."></textarea>
+                </div>
+                <div class="mf-pin-row">
+                    <div class="mf-pin-info">
+                        <i class="fas fa-thumbtack"></i>
+                        <div>
+                            <span>পণ্য পিন করুন</span>
+                            <small>পিন করলে ওয়েবসাইটে সবার আগে দেখাবে</small>
+                        </div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="productPinned">
+                        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                    </label>
+                </div>
+                <div class="mf-actions">
+                    <button type="button" class="action-btn ghost-btn" onclick="closeProdModal()">বাতিল</button>
+                    <button type="submit" class="action-btn primary-btn"><i class="fas fa-save"></i> <span id="submitBtnText">যোগ করুন</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script type="importmap">{"imports":{"firebase/app":"https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js","firebase/firestore":"https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js","firebase/auth":"https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"}}</script>
+<script type="module" src="admin-script.js"></script>
+</body>
+</html>
